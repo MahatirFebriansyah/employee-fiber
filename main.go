@@ -229,7 +229,7 @@ func main() {
 	app.Put("/employees/:id", employeeHandler.Update)
 	app.Delete("/employees/:id", employeeHandler.Delete)
 
-	fmt.Println("Server is running on http://localhost:3000")
+	fmt.Println("Employee API is running on http://localhost:3000")
 
 	app.Listen(":3000")
 }
