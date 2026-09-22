@@ -126,3 +126,41 @@ func (r *EmployeeRepository) Delete(id string) (int64, error) {
 
 	return rowsAffected, nil
 }
+
+func (r *EmployeeRepository) SearchByName(name string) ([]model.Employee, error) {
+	rows, err := r.DB.Query(
+		`SELECT id, name, email, position
+		 FROM employees
+		 WHERE name LIKE @p1`,
+		"%"+name+"%",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var employees []model.Employee
+
+	for rows.Next() {
+		var employee model.Employee
+
+		err := rows.Scan(
+			&employee.ID,
+			&employee.Name,
+			&employee.Email,
+			&employee.Position,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		employees = append(employees, employee)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return employees, nil
+}

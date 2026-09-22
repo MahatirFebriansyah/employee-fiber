@@ -3,7 +3,7 @@ package handler
 import (
 	"database/sql"
 	"strconv"
-
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 
 	"employee-fiber/model"
@@ -134,4 +134,31 @@ func (h *EmployeeHandler) Delete(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "Employee berhasil dihapus",
 	})
+}
+
+func (h *EmployeeHandler) SearchByName(c *fiber.Ctx) error {
+	name := c.Query("name")
+
+	if name == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Parameter name wajib diisi",
+		})
+	}
+
+	employees, err := h.Repository.SearchByName(name)
+	if err != nil {
+		fmt.Println("ERROR SEARCH:", err)
+
+		return c.Status(500).JSON(fiber.Map{
+			"error": "Gagal mencari employee",
+		})
+	}
+
+	if len(employees) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"error": "Employee tidak ditemukan",
+		})
+	}
+
+	return c.JSON(employees)
 }

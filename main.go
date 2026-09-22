@@ -224,6 +224,7 @@ func main() {
 	employeeHandler := handler.NewEmployeeHandler(employeeRepository)
 
 	app.Get("/employees", employeeHandler.GetAll)
+	app.Get("/employees/search", employeeHandler.SearchByName)
 	app.Get("/employees/:id", employeeHandler.GetByID)
 	app.Post("/employees", employeeHandler.Create)
 	app.Put("/employees/:id", employeeHandler.Update)
